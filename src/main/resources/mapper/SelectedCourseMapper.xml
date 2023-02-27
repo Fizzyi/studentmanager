@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.sutdentmanager.dao.SelectedCourseDao">
+    <resultMap id="SelectedCourseInfo" type="com.study.sutdentmanager.pojo.SelectedCourse">
+        <result column="id" property="id"/>
+        <result column="student_id" property="studentId"/>
+        <result column="course_id" property="courseId"/>
+    </resultMap>
+
+
+    <select id="queryList" resultMap="SelectedCourseInfo">
+        select * from s_selected_course
+        <where>
+            <if test="studentId!=null">and student_id LIKE concat("%",#{studentId},"%")</if>
+            <if test="courseId!=null">and course_id LIKE concat("%",#{courseId},"%")</if>
+        </where>
+        limit #{startIndex},offset #{pagesize}
+    </select>
+
+    <select id="queryCount" resultType="integer">
+        select count(1) from s_selected_course
+        <where>
+            <if test="studentId!=null">and student_id LIKE concat("%",#{studentId},"%")</if>
+            <if test="courseId!=null">and course_id LIKE concat("%",#{courseId},"%")</if>
+        </where>
+    </select>
+
+    <select id="isStudentId" parameterType="int" resultMap="SelectedCourseInfo">
+        select * from s_selected_course
+        <where>
+            student_id = #{studentId}
+        </where>
+    </select>
+</mapper>

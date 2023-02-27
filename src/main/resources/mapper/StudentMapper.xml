@@ -3,7 +3,90 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.study.sutdentmanager.dao.StudentDao">
+    <resultMap id="StudentInfo" type="com.study.sutdentmanager.pojo.Student">
+        <result column="id" property="id"/>
+        <result column="sn" property="sn"/>
+        <result column="username" property="username"/>
+        <result column="password" property="password"/>
+        <result column="clazz_id" property="clazzId"/>
+        <result column="sex" property="sex"/>
+        <result column="mobile" property="mobile"/>
+        <result column="qq" property="qq"/>
+        <result column="photo" property="photo"/>
+    </resultMap>
+
+
     <select id="findByStudent" resultType="com.study.sutdentmanager.pojo.Student">
-        select * from s_student where id = #{id}
+        select *
+        from s_student
+        where id = #{id}
+    </select>
+
+    <select id="queryList" resultMap="StudentInfo">
+        select * from s_student
+        <where>
+            <if test="username!=null">and username LIKE concat("%",#{username},"%")</if>
+            <if test="clazzid!=null">and clazz_id LIKE concat("%",#{clazzid},"%")</if>
+            <if test="studentid!=null">and id = #{studentid}</if>
+        </where>
+        limit #{startIndex},#{pagesize}
+    </select>
+
+    <select id="queryCount" resultType="integer">
+        select count(1) from s_student
+        <where>
+            <if test="username!=null">and username LIKE concat("%",#{username},"%")</if>
+            <if test="clazzif!=null">and clazz_id LIKE concat("%",#{clazzid},"%")</if>
+            <if test="studentid!=null">and id = #{studentid}</if>
+        </where>
+    </select>
+
+    <select id="findById" parameterType="int" resultType="com.study.sutdentmanager.pojo.Student">
+        select *
+        from s_student
+        where id = #{id};
+    </select>
+
+    <delete id="deleteStudent" parameterType="ArrayList">
+        delete from s_student
+        <where>
+            id in
+            <foreach collection="list" open="(" close=")" separator="," item="id">
+                #{id}
+            </foreach>
+        </where>
+    </delete>
+    <insert id="addStudent" parameterType="com.study.sutdentmanager.pojo.Student">
+        insert into s_student(sn, username, password, clazz_id, sex, mobile, qq, photo)
+        values (#{sn}, #{username}, #{password}, #{clazzId}, #{sex}, #{mobile}, #{qq}, #{photo})
+    </insert>
+
+    <update id="editStudent" parameterType="com.study.sutdentmanager.pojo.Student">
+        update s_student
+        <set>
+            <if test="username != null">
+                username = #{username},
+            </if>
+            <if test="clazzId != null">
+                clazz_id = #{clazzId},
+            </if>
+            <if test="sex != null">
+                sex = #{sex},
+            </if>
+            <if test="mobile != null">
+                mobile = #{mobile},
+            </if>
+            <if test="qq != null">
+                qq = #{qq},
+            </if>
+            <if test="photo != null">
+                photo = #{photo},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <select id="isStudentByClazzId" parameterType="int" resultType="integer">
+        select count(1) from s_selected_course where course_id = #{id};
     </select>
 </mapper>

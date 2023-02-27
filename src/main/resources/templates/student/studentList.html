@@ -149,8 +149,8 @@
 					url: [[@{/clazz/getClazzList(from=combox)}]],
 					onChange: function(newValue, oldValue){
 						//加载班级下的学生
-						//$('#dataList').datagrid("options").queryParams = {clazzid: newValue};
-						//$('#dataList').datagrid("reload");
+						$('#dataList').datagrid("options").queryParams = {clazzid: newValue};
+						$('#dataList').datagrid("reload");
 					}
 				});
 			}

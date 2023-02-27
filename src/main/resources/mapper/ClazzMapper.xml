@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.study.sutdentmanager.dao.ClazzDao">
+    <resultMap type="com.study.sutdentmanager.pojo.Clazz" id="ClazzInfo">
+        <result column="id" property="id"/>
+        <result column="name" property="name"/>
+        <result column="info" property="info"/>
+    </resultMap>
+
+    <select id="queryList" resultMap="ClazzInfo">
+        select * from s_clazz
+        <where>
+            <if test="name!=null">and name like concat("%",#{name},"%")</if>
+        </where>
+        limit #{startIndex},#{pagesize}
+    </select>
+
+    <select id="queryCount" resultType="int">
+        select count(1) from s_clazz
+        <where>
+            <if test="name!=null">and name LIKE concat("%",#{name},"%")</if>
+        </where>
+
+    </select>
+
+    <insert id="addClazz" parameterType="com.study.sutdentmanager.pojo.Clazz">
+        insert into s_clazz(name, info)
+        values (#{name}, #{info});
+    </insert>
+    
+    <delete id="deleteClazz">
+        delete from s_class where id in
+        <foreach collection="list" index="index" item="item" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </delete>
+</mapper>
